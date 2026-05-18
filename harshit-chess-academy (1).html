@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harshit Singh | Chess Mastery Classes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --white:#ffffff;--black:#000000;--near-black:#0d0d0d;
+  --off-white:#f7f7f4;--light-gray:#e8e8e8;--mid-gray:#888;
+  --serif:'Cormorant Garamond',serif;--sans:'Outfit',sans-serif;
+  --ease:cubic-bezier(0.25,0.46,0.45,0.94);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--white);color:var(--black);overflow-x:hidden;}
+
+/* ── 3D CHESS PIECE STYLES ── */
+.chess3d{display:inline-block;filter:drop-shadow(3px 6px 8px rgba(0,0,0,0.22));transition:transform 0.3s var(--ease);}
+.chess3d:hover{transform:scale(1.08) translateY(-4px);}
+
+/* Scattered decorative pieces across sections */
+.piece-scatter{position:absolute;pointer-events:none;z-index:0;opacity:0.08;}
+.piece-scatter svg{filter:drop-shadow(2px 4px 6px rgba(0,0,0,0.3));}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 56px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--light-gray);
+  transition:padding 0.35s var(--ease);
+}
+.nav-logo{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-1px;line-height:1;display:flex;align-items:center;gap:10px;}
+.nav-logo span{font-style:italic;font-weight:300;}
+.nav-logo-icon{opacity:0.75;flex-shrink:0;}
+.nav-links{display:flex;gap:44px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;color:var(--black);opacity:0.5;transition:opacity 0.2s;}
+.nav-links a:hover{opacity:1;}
+.nav-cta{
+  background:var(--black);color:var(--white);
+  padding:12px 28px;font-size:11px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;display:inline-block;
+  transition:all 0.2s;
+}
+.nav-cta:hover{background:#222;transform:translateY(-1px);}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.nav-toggle span{display:block;width:24px;height:1.5px;background:var(--black);transition:all 0.3s;}
+
+/* MOBILE MENU */
+.mobile-menu{
+  position:fixed;inset:0;background:var(--white);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;
+  opacity:0;pointer-events:none;transition:opacity 0.35s var(--ease);
+}
+.mobile-menu.open{opacity:1;pointer-events:all;}
+.mobile-menu a{font-family:var(--serif);font-size:44px;font-weight:700;letter-spacing:-2px;text-decoration:none;color:var(--black);transition:opacity 0.2s;}
+.mobile-menu a:hover{opacity:0.5;}
+.mobile-close{position:absolute;top:24px;right:28px;font-size:36px;cursor:pointer;background:none;border:none;font-family:var(--sans);font-weight:200;color:var(--black);}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 56px 80px;position:relative;overflow:hidden;
+}
+.hero-layout{display:flex;align-items:center;gap:0;width:100%;max-width:1200px;position:relative;z-index:2;}
+.hero-content{max-width:600px;flex-shrink:0;}
+.hero-pieces-cluster{
+  flex:1;display:flex;align-items:center;justify-content:center;
+  position:relative;min-height:480px;min-width:300px;
+}
+
+.eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:4px;
+  text-transform:uppercase;color:var(--mid-gray);
+  margin-bottom:36px;display:flex;align-items:center;gap:16px;
+}
+.eyebrow::before{content:'';width:36px;height:1px;background:currentColor;}
+.hero-title{
+  font-family:var(--serif);
+  font-size:clamp(60px,8vw,108px);
+  font-weight:700;line-height:0.93;letter-spacing:-4px;
+  margin-bottom:40px;
+}
+.hero-title em{font-style:italic;font-weight:300;}
+.hero-sub{font-size:16px;font-weight:300;color:#555;line-height:1.75;max-width:440px;margin-bottom:52px;}
+.hero-actions{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  background:var(--black);color:var(--white);
+  padding:18px 44px;font-size:12px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;text-decoration:none;
+  display:inline-block;transition:all 0.3s var(--ease);position:relative;overflow:hidden;
+}
+.btn-primary::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.08);
+  transform:translateX(-100%);transition:transform 0.45s var(--ease);
+}
+.btn-primary:hover::after{transform:translateX(0);}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-ghost{
+  border:1px solid rgba(0,0,0,0.25);color:var(--black);
+  padding:18px 44px;font-size:12px;font-weight:400;
+  letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;display:inline-block;transition:all 0.3s;
+}
+.btn-ghost:hover{border-color:var(--black);background:var(--black);color:var(--white);}
+
+/* ── HERO PIECES CLUSTER ── */
+/* Big central king */
+.hpc-king{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);animation:hfloat1 8s ease-in-out infinite;}
+/* Orbiting pieces */
+.hpc-queen{position:absolute;top:6%;right:10%;animation:hfloat2 10s ease-in-out infinite;}
+.hpc-rook{position:absolute;bottom:12%;left:5%;animation:hfloat3 7s ease-in-out infinite;}
+.hpc-bishop{position:absolute;top:10%;left:10%;animation:hfloat4 9s ease-in-out infinite;}
+.hpc-knight{position:absolute;bottom:10%;right:8%;animation:hfloat1 11s ease-in-out infinite 1s;}
+.hpc-pawn-a{position:absolute;top:30%;right:2%;animation:hfloat2 6s ease-in-out infinite 0.5s;}
+.hpc-pawn-b{position:absolute;bottom:32%;left:2%;animation:hfloat3 8s ease-in-out infinite 2s;}
+/* Mini board background */
+.hpc-board{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:220px;height:220px;perspective:700px;pointer-events:none;
+  opacity:0.35;
+}
+.hpc-board-inner{
+  width:100%;height:100%;transform-style:preserve-3d;
+  transform:rotateX(48deg) rotateZ(-15deg);
+  animation:boardTilt 10s ease-in-out infinite;
+}
+.hpc-grid{
+  display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);
+  width:100%;height:100%;border:1.5px solid var(--black);
+  box-shadow:6px 8px 0 rgba(0,0,0,0.12),12px 14px 0 rgba(0,0,0,0.06);
+}
+.hpc-cell.dark{background:var(--black);}
+.hpc-cell.light{background:var(--white);outline:0.5px solid #ddd;}
+
+@keyframes boardTilt{
+  0%,100%{transform:rotateX(48deg) rotateZ(-15deg) translateY(0);}
+  50%{transform:rotateX(48deg) rotateZ(-15deg) translateY(-18px);}
+}
+@keyframes hfloat1{0%,100%{transform:translate(-50%,-50%) translateY(0) rotate(-3deg);}50%{transform:translate(-50%,-50%) translateY(-24px) rotate(3deg);}}
+@keyframes hfloat2{0%,100%{transform:translateY(-10px) rotate(4deg);}50%{transform:translateY(14px) rotate(-4deg);}}
+@keyframes hfloat3{0%,100%{transform:translateY(6px) rotate(-6deg);}50%{transform:translateY(-18px) rotate(3deg);}}
+@keyframes hfloat4{0%,100%{transform:translateY(-14px) rotate(5deg);}50%{transform:translateY(10px) rotate(-3deg);}}
+
+/* ── MARQUEE ── */
+.marquee{background:var(--black);padding:20px 0;overflow:hidden;white-space:nowrap;}
+.marquee-track{display:inline-flex;animation:marqueeRun 22s linear infinite;}
+.marquee-item{
+  font-family:var(--serif);font-size:18px;font-style:italic;
+  color:rgba(255,255,255,0.75);padding:0 56px;
+  border-right:1px solid rgba(255,255,255,0.15);
+}
+@keyframes marqueeRun{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ── SECTIONS ── */
+.section{padding:128px 56px;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-title{
+  font-family:var(--serif);
+  font-size:clamp(38px,5vw,72px);
+  font-weight:600;line-height:1.05;letter-spacing:-2.5px;
+}
+.section-title em{font-style:italic;font-weight:300;}
+
+/* ── ABOUT ── */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:flex-start;}
+.about-title{font-family:var(--serif);font-size:clamp(42px,5.5vw,78px);font-weight:600;line-height:1.02;letter-spacing:-3px;margin-bottom:36px;}
+.about-title em{font-style:italic;font-weight:300;}
+.about-text{font-size:16px;font-weight:300;color:#444;line-height:1.8;margin-bottom:48px;}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--light-gray);}
+.stat{padding:28px 24px;border-right:1px solid var(--light-gray);text-align:center;}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:var(--serif);font-size:52px;font-weight:700;letter-spacing:-2px;line-height:1;margin-bottom:6px;}
+.stat-l{font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--mid-gray);}
+
+.ach-list{display:flex;flex-direction:column;}
+.ach{
+  padding:26px 0;border-bottom:1px solid var(--light-gray);
+  display:flex;align-items:flex-start;gap:24px;
+  opacity:0;transform:translateX(32px);
+  transition:all 0.75s var(--ease);
+}
+.ach.visible{opacity:1;transform:translateX(0);}
+.ach-n{font-family:var(--serif);font-size:12px;font-weight:300;color:var(--mid-gray);min-width:28px;margin-top:2px;}
+.ach-t{font-size:15px;font-weight:400;line-height:1.5;color:#111;}
+
+/* ── FORMAT SECTION ── */
+.formats-wrap{background:var(--off-white);padding:128px 56px;position:relative;overflow:hidden;}
+.formats-head{text-align:center;max-width:560px;margin:0 auto 80px;}
+.formats-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--light-gray);max-width:1100px;margin:0 auto;}
+.fcard{
+  background:var(--white);padding:72px 60px;
+  transition:all 0.45s var(--ease);cursor:default;
+  position:relative;overflow:hidden;
+}
+.fcard::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--black);
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform 0.45s var(--ease);
+}
+.fcard:hover::after{transform:scaleY(1);}
+.fcard:hover{background:var(--black);color:var(--white);}
+.fcard-tag{font-size:10px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:28px;transition:color 0.4s;}
+.fcard:hover .fcard-tag{color:rgba(255,255,255,0.4);}
+.fcard-name{font-family:var(--serif);font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;margin-bottom:32px;}
+.fcard-desc{font-size:15px;font-weight:300;color:#555;line-height:1.75;margin-bottom:44px;transition:color 0.4s;}
+.fcard:hover .fcard-desc{color:rgba(255,255,255,0.6);}
+.fcard-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.fcard-list li{font-size:14px;font-weight:300;display:flex;align-items:center;gap:14px;color:#333;transition:color 0.4s;}
+.fcard:hover .fcard-list li{color:rgba(255,255,255,0.8);}
+.fcard-list li::before{content:'';width:18px;height:1px;background:currentColor;flex-shrink:0;opacity:0.5;}
+/* decorative piece inside format card */
+.fcard-piece{position:absolute;bottom:-10px;right:-10px;opacity:0.05;pointer-events:none;transition:opacity 0.4s;}
+.fcard:hover .fcard-piece{opacity:0.08;}
+
+/* ── PRICING ── */
+.pricing-head{text-align:center;max-width:580px;margin:0 auto 88px;}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border:1px solid var(--light-gray);max-width:980px;margin:0 auto;
+}
+.pcard{
+  padding:56px 44px;border-right:1px solid var(--light-gray);
+  display:flex;flex-direction:column;position:relative;
+  opacity:0;transform:translateY(48px);
+  transition:all 0.9s var(--ease);
+}
+.pcard:last-child{border-right:none;}
+.pcard.visible{opacity:1;transform:translateY(0);}
+.pcard.hot{background:var(--black);color:var(--white);}
+.pcard-badge{
+  position:absolute;top:24px;right:24px;
+  font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;
+  padding:5px 12px;border:1px solid currentColor;opacity:0.6;
+}
+.pcard-name{font-size:10px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:24px;}
+.pcard.hot .pcard-name{color:rgba(255,255,255,0.4);}
+.pcard-freq{
+  display:inline-flex;align-items:center;padding:8px 16px;
+  border:1px solid currentColor;opacity:0.25;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;
+  margin-bottom:32px;width:fit-content;
+}
+.pcard-price{font-family:var(--serif);font-size:80px;font-weight:700;letter-spacing:-4px;line-height:1;margin-bottom:4px;}
+.pcard-price sup{font-size:26px;font-weight:400;vertical-align:top;margin-top:14px;display:inline-block;}
+.pcard-period{font-size:12px;color:var(--mid-gray);font-weight:300;margin-bottom:40px;}
+.pcard.hot .pcard-period{color:rgba(255,255,255,0.4);}
+.pcard-divider{height:1px;background:var(--light-gray);margin-bottom:32px;}
+.pcard.hot .pcard-divider{background:rgba(255,255,255,0.12);}
+.pcard-detail{font-family:var(--serif);font-size:19px;font-style:italic;font-weight:400;margin-bottom:28px;}
+.pcard-feats{list-style:none;display:flex;flex-direction:column;gap:14px;flex:1;margin-bottom:44px;}
+.pcard-feats li{font-size:13px;font-weight:300;color:#444;display:flex;align-items:flex-start;gap:12px;line-height:1.4;}
+.pcard.hot .pcard-feats li{color:rgba(255,255,255,0.7);}
+.pcard-feats li::before{content:'';width:14px;height:1px;background:currentColor;margin-top:9px;flex-shrink:0;opacity:0.4;}
+.pcard-btn{
+  display:block;text-align:center;padding:17px 12px;
+  font-size:11px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--black);color:var(--black);
+  transition:all 0.3s;margin-top:auto;
+}
+.pcard-btn:hover{background:var(--black);color:var(--white);}
+.pcard.hot .pcard-btn{border-color:var(--white);color:var(--white);}
+.pcard.hot .pcard-btn:hover{background:var(--white);color:var(--black);}
+/* Piece watermark inside pricing card */
+.pcard-piece{position:absolute;bottom:12px;right:12px;opacity:0.04;pointer-events:none;}
+.pcard.hot .pcard-piece{opacity:0.07;}
+
+/* ── CURRICULUM ── */
+.curriculum{background:var(--near-black);color:var(--white);padding:128px 56px;position:relative;overflow:hidden;}
+.curr-head{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  max-width:1100px;margin:0 auto 88px;
+}
+.curr-title{font-family:var(--serif);font-size:clamp(36px,5vw,64px);font-weight:600;letter-spacing:-2.5px;line-height:1.05;max-width:380px;}
+.curr-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,0.06);
+  max-width:1100px;margin:0 auto;
+}
+.ccard{
+  background:var(--near-black);padding:44px 36px;
+  border-top:2px solid transparent;
+  transition:opacity 0.8s var(--ease),transform 0.8s var(--ease),border-color 0.3s,background 0.3s;
+  opacity:0;transform:translateY(32px);
+  position:relative;overflow:hidden;
+}
+.ccard.visible{opacity:1;transform:translateY(0);}
+.ccard:hover{border-top-color:var(--white);background:#1a1a1a;}
+.ccard-n{font-family:var(--serif);font-size:12px;font-weight:300;color:rgba(255,255,255,0.2);margin-bottom:40px;}
+.ccard-name{font-family:var(--serif);font-size:24px;font-weight:600;line-height:1.15;margin-bottom:16px;}
+.ccard-desc{font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.75;}
+.ccard-piece{position:absolute;bottom:-8px;right:-8px;opacity:0.06;pointer-events:none;transition:opacity 0.3s;}
+.ccard:hover .ccard-piece{opacity:0.12;}
+
+/* ── BOOK SECTION ── */
+.book-wrap{background:var(--off-white);padding:128px 56px;}
+.book-inner{max-width:680px;margin:0 auto;text-align:center;}
+.book-title{font-family:var(--serif);font-size:clamp(44px,7vw,96px);font-weight:700;line-height:0.92;letter-spacing:-4px;margin-bottom:36px;}
+.book-title em{font-style:italic;font-weight:300;}
+.book-desc{font-size:16px;font-weight:300;color:#555;line-height:1.75;margin-bottom:64px;max-width:480px;margin-left:auto;margin-right:auto;}
+.book-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
+.bplan{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:26px 32px;border:1px solid var(--light-gray);
+  text-decoration:none;color:var(--black);
+  background:var(--white);
+  transition:all 0.35s var(--ease);
+  position:relative;
+}
+.bplan:hover{border-color:var(--black);background:var(--black);color:var(--white);}
+.bplan.popular{background:var(--black);color:var(--white);border-color:var(--black);}
+.bplan.popular:hover{background:#1a1a1a;}
+.bplan-badge{
+  position:absolute;top:-1px;right:24px;
+  background:var(--white);color:var(--black);
+  font-size:9px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;padding:4px 12px;
+}
+.bplan.popular .bplan-badge{display:block;}
+.bplan-label{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;opacity:0.45;margin-bottom:8px;}
+.bplan-price{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1;}
+.bplan-price span{font-size:14px;font-style:italic;font-weight:300;}
+.bplan-freq{font-size:12px;margin-top:4px;opacity:0.55;}
+.bplan-arrow{font-size:22px;font-weight:200;opacity:0.5;}
+.book-note{font-size:12px;color:#999;font-weight:300;text-align:center;}
+
+/* ── FAQ ── */
+.faq-wrap{padding:128px 56px;max-width:780px;margin:0 auto;}
+.faq-head{margin-bottom:72px;}
+.faq-item{border-bottom:1px solid var(--light-gray);}
+.faq-q{
+  padding:28px 0;font-family:var(--serif);font-size:22px;font-weight:600;
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  gap:24px;transition:opacity 0.2s;user-select:none;
+}
+.faq-q:hover{opacity:0.65;}
+.faq-plus{font-size:30px;font-weight:200;transition:transform 0.35s var(--ease);flex-shrink:0;}
+.faq-item.open .faq-plus{transform:rotate(45deg);}
+.faq-a{overflow:hidden;max-height:0;transition:max-height 0.45s var(--ease);}
+.faq-a-inner{padding:0 0 28px;font-size:15px;font-weight:300;color:#555;line-height:1.8;}
+
+/* ── FOOTER ── */
+footer{background:var(--black);color:var(--white);padding:88px 56px 44px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:80px;max-width:1200px;margin:0 auto 80px;}
+.footer-brand{font-family:var(--serif);font-size:52px;font-weight:700;letter-spacing:-2.5px;line-height:1;margin-bottom:20px;}
+.footer-tag{font-size:13px;font-weight:300;color:rgba(255,255,255,0.35);line-height:1.7;max-width:280px;}
+.footer-h{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:24px;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.footer-links a{text-decoration:none;color:rgba(255,255,255,0.55);font-size:14px;font-weight:300;transition:color 0.2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.07);padding-top:40px;
+  display:flex;justify-content:space-between;align-items:center;
+  max-width:1200px;margin:0 auto;
+}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25);font-weight:300;}
+.footer-wa{
+  font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:2px;
+  text-transform:uppercase;text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:2px;
+  transition:color 0.2s;
+}
+.footer-wa:hover{color:var(--white);}
+
+/* ── SCROLL REVEAL ── */
+.reveal{opacity:0;transform:translateY(44px);transition:all 0.9s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ── DECORATIVE BG GLYPH ── */
+.bg-glyph{
+  position:absolute;font-family:var(--serif);
+  font-size:360px;font-weight:700;opacity:0.028;
+  pointer-events:none;user-select:none;line-height:1;
+  z-index:0;color:var(--black);
+}
+
+/* ── SECTION SCATTER PIECES (all over website) ── */
+.section-piece{
+  position:absolute;pointer-events:none;user-select:none;
+  opacity:0;transition:opacity 1.2s ease;
+}
+.section-piece.visible{opacity:1;}
+
+/* About section pieces */
+.about-wrap{position:relative;overflow:hidden;}
+/* Curriculum bg pieces */
+.curr-bg-piece{position:absolute;opacity:0.04;pointer-events:none;}
+
+/* ── MOBILE ── */
+@media(max-width:900px){
+  nav{padding:18px 24px;}
+  .nav-links{display:none;}
+  .nav-cta{display:none;}
+  .nav-toggle{display:flex;}
+  
+  .hero{padding:100px 24px 64px;}
+  .hero-layout{flex-direction:column;gap:48px;}
+  .hero-content{max-width:100%;}
+  .hero-pieces-cluster{min-height:300px;width:100%;max-width:360px;align-self:center;}
+  .hero-title{letter-spacing:-2.5px;}
+  .hpc-king svg{width:90px;height:auto;}
+  
+  .section{padding:80px 24px;}
+  .about-grid{grid-template-columns:1fr;gap:56px;}
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .stat{padding:20px 12px;}
+  .stat-n{font-size:40px;}
+  
+  .formats-wrap{padding:80px 24px;}
+  .formats-grid{grid-template-columns:1fr;}
+  .fcard{padding:52px 36px;}
+  .fcard-name{font-size:44px;}
+  
+  .pricing-section{padding:80px 24px;}
+  .pricing-grid{grid-template-columns:1fr;border:none;gap:0;}
+  .pcard{border-right:none;border-bottom:1px solid var(--light-gray);}
+  .pcard:last-child{border-bottom:none;}
+  /* Keep pricing order as-is: Starter, Scholar, Master */
+  
+  .curriculum{padding:80px 24px;}
+  .curr-head{flex-direction:column;gap:36px;align-items:flex-start;}
+  .curr-grid{grid-template-columns:1fr 1fr;}
+  .ccard{padding:36px 28px;}
+  
+  .book-wrap{padding:80px 24px;}
+  .book-title{letter-spacing:-2.5px;}
+  .bplan{padding:22px 24px;}
+  
+  .faq-wrap{padding:80px 24px;}
+  .faq-q{font-size:19px;}
+  
+  footer{padding:72px 24px 40px;}
+  .footer-grid{grid-template-columns:1fr;gap:44px;}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center;}
+  .footer-brand{font-size:40px;}
+  
+  .curr-grid{grid-template-columns:1fr;}
+
+  .hpc-queen svg,.hpc-rook svg,.hpc-bishop svg,.hpc-knight svg{width:44px;height:auto;}
+  .hpc-pawn-a svg,.hpc-pawn-b svg{width:30px;height:auto;}
+}
+
+@media(max-width:480px){
+  .hero-title{font-size:clamp(50px,14vw,80px);letter-spacing:-2px;}
+  .hero-pieces-cluster{min-height:240px;}
+  .hpc-king svg{width:72px;height:auto;}
+  .btn-primary,.btn-ghost{padding:16px 28px;font-size:11px;}
+  .hero-actions{gap:12px;}
+  .pcard-price{font-size:60px;}
+  .bplan{flex-direction:column;align-items:flex-start;gap:12px;}
+  .bplan-arrow{align-self:flex-end;}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG DEFS for 3D pieces reused across site -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <defs>
+    <!-- ─── KING 3D ─── -->
+    <symbol id="piece-king-3d" viewBox="0 0 80 110">
+      <defs>
+        <linearGradient id="kg-side" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="40%" stop-color="#3a3a3a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+        <linearGradient id="kg-top" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#666"/>
+          <stop offset="100%" stop-color="#222"/>
+        </linearGradient>
+      </defs>
+      <!-- Base -->
+      <ellipse cx="40" cy="100" rx="28" ry="7" fill="#1a1a1a"/>
+      <rect x="12" y="88" width="56" height="14" rx="2" fill="url(#kg-side)"/>
+      <ellipse cx="40" cy="88" rx="28" ry="6" fill="#555"/>
+      <!-- Neck collar -->
+      <rect x="18" y="76" width="44" height="14" rx="2" fill="url(#kg-side)"/>
+      <ellipse cx="40" cy="76" rx="22" ry="5" fill="#4a4a4a"/>
+      <!-- Body shaft -->
+      <rect x="22" y="38" width="36" height="40" rx="3" fill="url(#kg-side)"/>
+      <ellipse cx="40" cy="38" rx="18" ry="4" fill="#4a4a4a"/>
+      <!-- Head -->
+      <rect x="18" y="24" width="44" height="16" rx="3" fill="url(#kg-side)"/>
+      <ellipse cx="40" cy="24" rx="22" ry="5" fill="#555"/>
+      <!-- Cross vertical -->
+      <rect x="36" y="4" width="8" height="24" rx="2" fill="url(#kg-side)"/>
+      <ellipse cx="40" cy="4" rx="4" ry="2" fill="#666"/>
+      <!-- Cross horizontal -->
+      <rect x="26" y="10" width="28" height="8" rx="2" fill="url(#kg-side)"/>
+      <!-- Highlight lines -->
+      <line x1="20" y1="26" x2="60" y2="26" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+      <line x1="20" y1="78" x2="60" y2="78" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    </symbol>
+
+    <!-- ─── QUEEN 3D ─── -->
+    <symbol id="piece-queen-3d" viewBox="0 0 80 120">
+      <defs>
+        <linearGradient id="qn-side" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="40%" stop-color="#3a3a3a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="40" cy="110" rx="28" ry="7" fill="#1a1a1a"/>
+      <rect x="12" y="97" width="56" height="14" rx="2" fill="url(#qn-side)"/>
+      <ellipse cx="40" cy="97" rx="28" ry="6" fill="#555"/>
+      <rect x="18" y="83" width="44" height="16" rx="2" fill="url(#qn-side)"/>
+      <ellipse cx="40" cy="83" rx="22" ry="5" fill="#4a4a4a"/>
+      <!-- Waist -->
+      <path d="M26 82 C22 68 20 55 22 45 L58 45 C60 55 58 68 54 82 Z" fill="url(#qn-side)"/>
+      <!-- Crown base -->
+      <rect x="18" y="32" width="44" height="16" rx="2" fill="url(#qn-side)"/>
+      <ellipse cx="40" cy="32" rx="22" ry="5" fill="#4a4a4a"/>
+      <!-- Crown points -->
+      <rect x="18" y="14" width="7" height="20" rx="2" fill="url(#qn-side)"/>
+      <rect x="30" y="8" width="7" height="26" rx="2" fill="url(#qn-side)"/>
+      <rect x="43" y="8" width="7" height="26" rx="2" fill="url(#qn-side)"/>
+      <rect x="55" y="14" width="7" height="20" rx="2" fill="url(#qn-side)"/>
+      <!-- Crown balls -->
+      <circle cx="21" cy="12" r="4" fill="#4a4a4a"/>
+      <circle cx="33" cy="6" r="5" fill="#4a4a4a"/>
+      <circle cx="47" cy="6" r="5" fill="#4a4a4a"/>
+      <circle cx="59" cy="12" r="4" fill="#4a4a4a"/>
+      <line x1="18" y1="34" x2="62" y2="34" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+    </symbol>
+
+    <!-- ─── ROOK 3D ─── -->
+    <symbol id="piece-rook-3d" viewBox="0 0 78 110">
+      <defs>
+        <linearGradient id="rk-side" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="40%" stop-color="#3a3a3a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="39" cy="101" rx="28" ry="7" fill="#1a1a1a"/>
+      <rect x="11" y="88" width="56" height="14" rx="2" fill="url(#rk-side)"/>
+      <ellipse cx="39" cy="88" rx="28" ry="6" fill="#555"/>
+      <rect x="18" y="72" width="42" height="18" rx="2" fill="url(#rk-side)"/>
+      <ellipse cx="39" cy="72" rx="21" ry="5" fill="#4a4a4a"/>
+      <!-- Tower body -->
+      <rect x="22" y="36" width="34" height="38" rx="2" fill="url(#rk-side)"/>
+      <ellipse cx="39" cy="36" rx="17" ry="4" fill="#4a4a4a"/>
+      <!-- Battlements base -->
+      <rect x="16" y="22" width="46" height="16" rx="2" fill="url(#rk-side)"/>
+      <ellipse cx="39" cy="22" rx="23" ry="5" fill="#4a4a4a"/>
+      <!-- Battlements -->
+      <rect x="16" y="6" width="11" height="18" rx="1" fill="url(#rk-side)"/>
+      <rect x="33" y="6" width="11" height="18" rx="1" fill="url(#rk-side)"/>
+      <rect x="51" y="6" width="11" height="18" rx="1" fill="url(#rk-side)"/>
+      <ellipse cx="21" cy="6" rx="5" ry="2.5" fill="#4a4a4a"/>
+      <ellipse cx="38" cy="6" rx="5" ry="2.5" fill="#4a4a4a"/>
+      <ellipse cx="56" cy="6" rx="5" ry="2.5" fill="#4a4a4a"/>
+      <line x1="18" y1="38" x2="60" y2="38" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    </symbol>
+
+    <!-- ─── BISHOP 3D ─── -->
+    <symbol id="piece-bishop-3d" viewBox="0 0 70 120">
+      <defs>
+        <linearGradient id="bp-side" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="40%" stop-color="#3a3a3a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="35" cy="111" rx="26" ry="7" fill="#1a1a1a"/>
+      <rect x="9" y="98" width="52" height="14" rx="2" fill="url(#bp-side)"/>
+      <ellipse cx="35" cy="98" rx="26" ry="6" fill="#555"/>
+      <rect x="15" y="84" width="40" height="16" rx="2" fill="url(#bp-side)"/>
+      <ellipse cx="35" cy="84" rx="20" ry="5" fill="#4a4a4a"/>
+      <!-- Mitre body -->
+      <path d="M35 14 C50 26 56 55 52 83 L18 83 C14 55 20 26 35 14 Z" fill="url(#bp-side)"/>
+      <path d="M35 14 C36 26 36 55 36 83" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none"/>
+      <!-- Head ball -->
+      <circle cx="35" cy="10" r="8" fill="#3a3a3a"/>
+      <circle cx="35" cy="10" r="5" fill="#4a4a4a"/>
+      <!-- Cross on ball -->
+      <rect x="33" y="2" width="4" height="12" rx="1" fill="#222"/>
+      <rect x="29" y="8" width="12" height="4" rx="1" fill="#222"/>
+      <circle cx="35" cy="4" r="2" fill="#555"/>
+      <line x1="17" y1="86" x2="53" y2="86" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    </symbol>
+
+    <!-- ─── KNIGHT 3D ─── -->
+    <symbol id="piece-knight-3d" viewBox="0 0 80 120">
+      <defs>
+        <linearGradient id="kn-side" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="40%" stop-color="#3a3a3a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+        <linearGradient id="kn-face" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#444"/>
+          <stop offset="100%" stop-color="#222"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="40" cy="111" rx="28" ry="7" fill="#1a1a1a"/>
+      <rect x="12" y="98" width="56" height="14" rx="2" fill="url(#kn-side)"/>
+      <ellipse cx="40" cy="98" rx="28" ry="6" fill="#555"/>
+      <rect x="18" y="82" width="44" height="18" rx="2" fill="url(#kn-side)"/>
+      <ellipse cx="40" cy="82" rx="22" ry="5" fill="#4a4a4a"/>
+      <!-- Neck -->
+      <rect x="26" y="62" width="28" height="22" rx="4" fill="url(#kn-side)"/>
+      <!-- Horse head - profile facing right -->
+      <path d="M28 62 C28 44 34 28 46 18 C52 14 60 14 64 20 C66 24 64 30 60 32 C56 34 50 34 46 38 C42 42 40 50 40 62 Z" fill="url(#kn-face)"/>
+      <!-- Mane -->
+      <path d="M28 62 C28 50 30 40 36 32 C32 32 30 38 30 46 C28 50 28 56 28 62 Z" fill="#1a1a1a"/>
+      <!-- Nose -->
+      <path d="M56 26 C60 26 62 28 62 32 C60 32 56 30 54 28 Z" fill="#555"/>
+      <!-- Eye -->
+      <circle cx="56" cy="20" r="3" fill="#1a1a1a"/>
+      <circle cx="57" cy="19" r="1" fill="#666"/>
+      <!-- Nostril -->
+      <ellipse cx="60" cy="30" rx="2" ry="1.5" fill="#1a1a1a"/>
+      <line x1="20" y1="84" x2="60" y2="84" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    </symbol>
+
+    <!-- ─── PAWN 3D ─── -->
+    <symbol id="piece-pawn-3d" viewBox="0 0 60 100">
+      <defs>
+        <linearGradient id="pw-side" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#1a1a1a"/>
+          <stop offset="40%" stop-color="#3a3a3a"/>
+          <stop offset="100%" stop-color="#111"/>
+        </linearGradient>
+      </defs>
+      <ellipse cx="30" cy="93" rx="22" ry="6" fill="#1a1a1a"/>
+      <rect x="8" y="80" width="44" height="14" rx="2" fill="url(#pw-side)"/>
+      <ellipse cx="30" cy="80" rx="22" ry="5.5" fill="#555"/>
+      <!-- Waist ring -->
+      <rect x="16" y="68" width="28" height="14" rx="2" fill="url(#pw-side)"/>
+      <ellipse cx="30" cy="68" rx="14" ry="3.5" fill="#4a4a4a"/>
+      <!-- Body -->
+      <path d="M22 67 C20 56 19 46 20 40 L40 40 C41 46 40 56 38 67 Z" fill="url(#pw-side)"/>
+      <!-- Head ball -->
+      <circle cx="30" cy="30" r="14" fill="#333"/>
+      <circle cx="30" cy="28" r="10" fill="#3d3d3d"/>
+      <!-- Highlight on ball -->
+      <ellipse cx="26" cy="24" rx="5" ry="4" fill="rgba(255,255,255,0.12)"/>
+      <line x1="18" y1="70" x2="42" y2="70" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    </symbol>
+  </defs>
+</svg>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">×</button>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#classes" onclick="closeMobile()">Classes</a>
+  <a href="#pricing" onclick="closeMobile()">Pricing</a>
+  <a href="#book" onclick="closeMobile()">Book Now</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">
+    <svg class="nav-logo-icon" width="22" height="32" viewBox="0 0 60 100"><use href="#piece-pawn-3d"/></svg>
+    H<span>arshit</span> Singh
+  </div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#classes">Classes</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20book%20chess%20classes." class="nav-cta" target="_blank" rel="noopener">Book Now</a>
+  <button class="nav-toggle" id="navToggle" onclick="openMobile()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" id="hero">
+  <div class="hero-layout">
+    <!-- LEFT: Content -->
+    <div class="hero-content">
+      <div class="eyebrow">Nationals Chess Player &middot; UP State Champion</div>
+      <h1 class="hero-title">
+        Master<br>the <em>Art</em><br>of Chess
+      </h1>
+      <p class="hero-sub">
+        Learn from Harshit Singh — decorated national chess competitor and 
+        Uttar Pradesh State Chess Champion. Expert coaching for all levels, 
+        both online and offline.
+      </p>
+      <div class="hero-actions">
+        <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20book%20a%20free%20trial%20chess%20class." class="btn-primary" target="_blank" rel="noopener">Book a Free Trial &rarr;</a>
+        <a href="#pricing" class="btn-ghost">View Pricing</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: 3D Chess Pieces Cluster -->
+    <div class="hero-pieces-cluster" aria-hidden="true">
+      <!-- Mini chessboard -->
+      <div class="hpc-board">
+        <div class="hpc-board-inner">
+          <div class="hpc-grid" id="heroBoardGrid"></div>
+        </div>
+      </div>
+
+      <!-- Big central King -->
+      <div class="hpc-king chess3d" style="filter:drop-shadow(4px 10px 18px rgba(0,0,0,0.35));">
+        <svg width="110" height="145" viewBox="0 0 80 110"><use href="#piece-king-3d"/></svg>
+      </div>
+
+      <!-- Queen top-right -->
+      <div class="hpc-queen chess3d">
+        <svg width="56" height="75" viewBox="0 0 80 120"><use href="#piece-queen-3d"/></svg>
+      </div>
+
+      <!-- Rook bottom-left -->
+      <div class="hpc-rook chess3d">
+        <svg width="52" height="68" viewBox="0 0 78 110"><use href="#piece-rook-3d"/></svg>
+      </div>
+
+      <!-- Bishop top-left -->
+      <div class="hpc-bishop chess3d">
+        <svg width="46" height="76" viewBox="0 0 70 120"><use href="#piece-bishop-3d"/></svg>
+      </div>
+
+      <!-- Knight bottom-right -->
+      <div class="hpc-knight chess3d">
+        <svg width="52" height="74" viewBox="0 0 80 120"><use href="#piece-knight-3d"/></svg>
+      </div>
+
+      <!-- Pawn top-right edge -->
+      <div class="hpc-pawn-a chess3d">
+        <svg width="34" height="56" viewBox="0 0 60 100"><use href="#piece-pawn-3d"/></svg>
+      </div>
+
+      <!-- Pawn bottom-left edge -->
+      <div class="hpc-pawn-b chess3d">
+        <svg width="34" height="56" viewBox="0 0 60 100"><use href="#piece-pawn-3d"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MARQUEE ═══════ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<section class="section about-wrap" id="about" style="position:relative;overflow:hidden;">
+  <!-- Scattered pieces in about section -->
+  <div class="section-piece" style="right:2%;top:8%;transform:rotate(12deg);" aria-hidden="true">
+    <svg width="80" height="115" viewBox="0 0 80 120" style="opacity:0.07"><use href="#piece-queen-3d"/></svg>
+  </div>
+  <div class="section-piece" style="left:1%;bottom:10%;transform:rotate(-8deg);" aria-hidden="true">
+    <svg width="64" height="90" viewBox="0 0 78 110" style="opacity:0.06"><use href="#piece-rook-3d"/></svg>
+  </div>
+  <div class="about-grid" style="position:relative;z-index:1;">
+    <div>
+      <div class="eyebrow">The Coach</div>
+      <h2 class="about-title">Your Guide to <em>Chess Mastery</em></h2>
+      <p class="about-text">Harshit Singh is a decorated national-level chess player and UP State Chess Champion, with years of competitive experience and a deep passion for teaching. His structured methodology blends classical strategy with modern opening theory — tailored precisely to each student's pace and ambition.</p>
+      <div class="stats-row reveal">
+        <div class="stat">
+          <div class="stat-n">5+</div>
+          <div class="stat-l">Years Coaching</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">200+</div>
+          <div class="stat-l">Students Taught</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">50+</div>
+          <div class="stat-l">Tournaments Played</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="ach-list">
+        <div class="ach" style="transition-delay:0s"><span class="ach-n">01</span><span class="ach-t">Nationals Chess Player — represented Uttar Pradesh at national level competitions</span></div>
+        <div class="ach" style="transition-delay:0.12s"><span class="ach-n">02</span><span class="ach-t">UP State Chess Champion — winner of the Uttar Pradesh State Championship</span></div>
+        <div class="ach" style="transition-delay:0.22s"><span class="ach-n">03</span><span class="ach-t">Structured curriculum for all levels — from absolute beginner to tournament preparation</span></div>
+        <div class="ach" style="transition-delay:0.32s"><span class="ach-n">04</span><span class="ach-t">Personalized coaching with real game analysis, tactical puzzles, and endgame drills</span></div>
+        <div class="ach" style="transition-delay:0.42s"><span class="ach-n">05</span><span class="ach-t">Both in-person sessions in Noida and online classes available pan-India</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FORMATS ═══════ -->
+<div class="formats-wrap" id="classes">
+  <!-- Scattered pieces in formats section -->
+  <div style="position:absolute;top:6%;left:2%;opacity:0.06;transform:rotate(-10deg);pointer-events:none;" aria-hidden="true">
+    <svg width="70" height="98" viewBox="0 0 70 120"><use href="#piece-bishop-3d"/></svg>
+  </div>
+  <div style="position:absolute;bottom:6%;right:3%;opacity:0.06;transform:rotate(8deg);pointer-events:none;" aria-hidden="true">
+    <svg width="52" height="72" viewBox="0 0 80 110"><use href="#piece-king-3d"/></svg>
+  </div>
+  <div class="formats-head reveal" style="position:relative;z-index:1;">
+    <div class="eyebrow" style="justify-content:center;">Class Formats</div>
+    <h2 class="section-title" style="margin-bottom:16px;">Learn <em>Your Way</em></h2>
+    <p style="font-size:15px;font-weight:300;color:#666;line-height:1.75;">Choose the format that fits your life — the discipline of in-person coaching, or the flexibility of learning from anywhere.</p>
+  </div>
+  <div class="formats-grid" style="position:relative;z-index:1;">
+    <div class="fcard reveal">
+      <div class="fcard-tag">Format 01</div>
+      <div class="fcard-name">Online<br>Classes</div>
+      <p class="fcard-desc">Live interactive sessions from the comfort of home. Real-time board analysis, recorded replays, and direct feedback — all through your screen.</p>
+      <ul class="fcard-list">
+        <li>Live video sessions via any device</li>
+        <li>Interactive digital chessboard analysis</li>
+        <li>Sessions recorded for review</li>
+        <li>WhatsApp support group included</li>
+        <li>Available anywhere in India</li>
+      </ul>
+      <!-- Decorative piece watermark -->
+      <div class="fcard-piece" aria-hidden="true">
+        <svg width="120" height="168" viewBox="0 0 80 120"><use href="#piece-queen-3d"/></svg>
+      </div>
+    </div>
+    <div class="fcard reveal" style="transition-delay:0.15s">
+      <div class="fcard-tag">Format 02</div>
+      <div class="fcard-name">Offline<br>Classes</div>
+      <p class="fcard-desc">Face-to-face coaching at our Noida centre. Physical board work, real clock training, and the focused energy of a dedicated chess environment.</p>
+      <ul class="fcard-list">
+        <li>In-person at B-704, Pan Oasis, Sector-70, Noida</li>
+        <li>Physical board and clock training</li>
+        <li>Group and 1-on-1 sessions available</li>
+        <li>Tournament simulation games</li>
+        <li>Immediate feedback and correction</li>
+      </ul>
+      <div class="fcard-piece" aria-hidden="true">
+        <svg width="120" height="148" viewBox="0 0 80 110"><use href="#piece-king-3d"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PRICING ═══════ -->
+<section class="section pricing-section" id="pricing" style="position:relative;overflow:hidden;">
+  <!-- Scattered pieces -->
+  <div style="position:absolute;top:4%;right:1%;opacity:0.055;transform:rotate(6deg);pointer-events:none;" aria-hidden="true">
+    <svg width="58" height="78" viewBox="0 0 80 120"><use href="#piece-knight-3d"/></svg>
+  </div>
+  <div style="position:absolute;bottom:4%;left:1%;opacity:0.055;transform:rotate(-12deg);pointer-events:none;" aria-hidden="true">
+    <svg width="44" height="62" viewBox="0 0 60 100"><use href="#piece-pawn-3d"/></svg>
+  </div>
+  <div class="pricing-head reveal" style="position:relative;z-index:1;">
+    <div class="eyebrow" style="justify-content:center;">Invest in Your Game</div>
+    <h2 class="section-title" style="margin-bottom:16px;">Simple, <em>Transparent</em> Pricing</h2>
+    <p style="font-size:15px;font-weight:300;color:#666;line-height:1.7;">All plans cover one full month of coaching. Scale up your commitment, scale up your results.</p>
+  </div>
+  <div class="pricing-grid" style="position:relative;z-index:1;">
+
+    <!-- Starter FIRST -->
+    <div class="pcard" style="transition-delay:0s">
+      <div class="pcard-name">Starter</div>
+      <div class="pcard-freq">2 Classes / Week</div>
+      <div class="pcard-price"><sup>₹</sup>1,500</div>
+      <div class="pcard-period">per month &middot; ~8 classes</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-detail">Perfect for Beginners</div>
+      <ul class="pcard-feats">
+        <li>2 sessions per week</li>
+        <li>Chess fundamentals &amp; rules</li>
+        <li>Opening principles &amp; basic theory</li>
+        <li>Tactical patterns &amp; puzzles</li>
+        <li>WhatsApp doubt support</li>
+        <li>Online or offline format</li>
+      </ul>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20join%20the%20Starter%20Plan%20(2%20classes%2Fweek%20%E2%82%B91500%2Fmonth)." class="pcard-btn" target="_blank" rel="noopener">Book Starter Plan &rarr;</a>
+      <div class="pcard-piece" aria-hidden="true">
+        <svg width="90" height="120" viewBox="0 0 60 100"><use href="#piece-pawn-3d"/></svg>
+      </div>
+    </div>
+
+    <!-- Scholar (FEATURED) SECOND -->
+    <div class="pcard hot" style="transition-delay:0.18s">
+      <div class="pcard-badge">Most Popular</div>
+      <div class="pcard-name">Scholar</div>
+      <div class="pcard-freq" style="border-color:rgba(255,255,255,0.3);">3 Classes / Week</div>
+      <div class="pcard-price"><sup>₹</sup>2,000</div>
+      <div class="pcard-period">per month &middot; ~12 classes</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-detail">Accelerated Improvement</div>
+      <ul class="pcard-feats">
+        <li>3 sessions per week</li>
+        <li>Opening repertoire building</li>
+        <li>Middlegame strategy &amp; plans</li>
+        <li>Endgame technique fundamentals</li>
+        <li>Real game analysis &amp; review</li>
+        <li>Priority WhatsApp support</li>
+        <li>Online or offline format</li>
+      </ul>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20join%20the%20Scholar%20Plan%20(3%20classes%2Fweek%20%E2%82%B92000%2Fmonth)." class="pcard-btn" target="_blank" rel="noopener">Book Scholar Plan &rarr;</a>
+      <div class="pcard-piece" aria-hidden="true">
+        <svg width="90" height="130" viewBox="0 0 80 120"><use href="#piece-queen-3d"/></svg>
+      </div>
+    </div>
+
+    <!-- Master THIRD -->
+    <div class="pcard" style="transition-delay:0.36s">
+      <div class="pcard-name">Master</div>
+      <div class="pcard-freq">5 Classes / Week</div>
+      <div class="pcard-price"><sup>₹</sup>3,000</div>
+      <div class="pcard-period">per month &middot; ~20 classes</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-detail">Tournament Ready</div>
+      <ul class="pcard-feats">
+        <li>5 intensive sessions per week</li>
+        <li>Full competitive preparation</li>
+        <li>Deep opening analysis &amp; systems</li>
+        <li>Complete endgame mastery</li>
+        <li>Your tournament games reviewed</li>
+        <li>Psychological game preparation</li>
+        <li>FIDE rating guidance</li>
+        <li>Priority 1-on-1 coaching</li>
+      </ul>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20join%20the%20Master%20Plan%20(5%20classes%2Fweek%20%E2%82%B93000%2Fmonth)." class="pcard-btn" target="_blank" rel="noopener">Book Master Plan &rarr;</a>
+      <div class="pcard-piece" aria-hidden="true">
+        <svg width="90" height="118" viewBox="0 0 80 110"><use href="#piece-king-3d"/></svg>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════ CURRICULUM ═══════ -->
+<section class="curriculum" style="position:relative;overflow:hidden;">
+  <!-- Background scattered pieces in dark section -->
+  <div class="curr-bg-piece" style="right:2%;top:10%;transform:rotate(15deg);" aria-hidden="true">
+    <svg width="130" height="170" viewBox="0 0 80 120"><use href="#piece-queen-3d" fill="white"/></svg>
+  </div>
+  <div class="curr-bg-piece" style="left:1%;bottom:8%;transform:rotate(-10deg);" aria-hidden="true">
+    <svg width="110" height="145" viewBox="0 0 78 110"><use href="#piece-rook-3d" fill="white"/></svg>
+  </div>
+  <div class="curr-head" style="position:relative;z-index:1;">
+    <div>
+      <div class="eyebrow" style="color:rgba(255,255,255,0.35);">What You Learn</div>
+      <h2 class="curr-title section-title" style="color:white;">A Complete <em>Chess</em> Education</h2>
+    </div>
+    <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20know%20more%20about%20your%20chess%20curriculum." class="btn-primary" style="background:white;color:black;flex-shrink:0;" target="_blank" rel="noopener">Enquire Now</a>
+  </div>
+  <div class="curr-grid" style="position:relative;z-index:1;">
+    <div class="ccard" style="transition-delay:0s">
+      <div class="ccard-n">01</div>
+      <div class="ccard-name">Openings &amp; Theory</div>
+      <p class="ccard-desc">Build a solid, personalized opening repertoire with classical and modern systems tailored to your playing style.</p>
+      <div class="ccard-piece" aria-hidden="true">
+        <svg width="90" height="118" viewBox="0 0 78 110" style="filter:invert(1);opacity:0.5"><use href="#piece-rook-3d"/></svg>
+      </div>
+    </div>
+    <div class="ccard" style="transition-delay:0.1s">
+      <div class="ccard-n">02</div>
+      <div class="ccard-name">Tactical Patterns</div>
+      <p class="ccard-desc">Forks, pins, skewers, discovered attacks — master the recurring patterns that decide games at every level.</p>
+      <div class="ccard-piece" aria-hidden="true">
+        <svg width="84" height="112" viewBox="0 0 80 120" style="filter:invert(1);opacity:0.5"><use href="#piece-knight-3d"/></svg>
+      </div>
+    </div>
+    <div class="ccard" style="transition-delay:0.2s">
+      <div class="ccard-n">03</div>
+      <div class="ccard-name">Middlegame Plans</div>
+      <p class="ccard-desc">Understand pawn structures, piece coordination, weak squares, and how to formulate decisive winning plans.</p>
+      <div class="ccard-piece" aria-hidden="true">
+        <svg width="80" height="108" viewBox="0 0 80 120" style="filter:invert(1);opacity:0.5"><use href="#piece-queen-3d"/></svg>
+      </div>
+    </div>
+    <div class="ccard" style="transition-delay:0.3s">
+      <div class="ccard-n">04</div>
+      <div class="ccard-name">Endgame Mastery</div>
+      <p class="ccard-desc">Convert advantages into wins with precise king-and-pawn, rook, and queen endgame technique and calculation.</p>
+      <div class="ccard-piece" aria-hidden="true">
+        <svg width="78" height="100" viewBox="0 0 80 110" style="filter:invert(1);opacity:0.5"><use href="#piece-king-3d"/></svg>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ BOOK ═══════ -->
+<div class="book-wrap" id="book" style="position:relative;overflow:hidden;">
+  <!-- Scattered pieces in book section -->
+  <div style="position:absolute;left:2%;top:10%;opacity:0.07;transform:rotate(-8deg);pointer-events:none;" aria-hidden="true">
+    <svg width="72" height="96" viewBox="0 0 70 120"><use href="#piece-bishop-3d"/></svg>
+  </div>
+  <div style="position:absolute;right:2%;bottom:10%;opacity:0.07;transform:rotate(10deg);pointer-events:none;" aria-hidden="true">
+    <svg width="58" height="78" viewBox="0 0 80 120"><use href="#piece-knight-3d"/></svg>
+  </div>
+  <div class="book-inner" style="position:relative;z-index:1;">
+    <div class="eyebrow" style="justify-content:center;">Book a Class</div>
+    <h2 class="book-title reveal">Ready to <em>Make<br>Your Move?</em></h2>
+    <p class="book-desc reveal">Select your plan and connect directly with Harshit Singh on WhatsApp to schedule your first class. No forms — just a conversation.</p>
+    <div class="book-cards reveal">
+      <!-- Starter first -->
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20the%20Starter%20Plan%20(2%20classes%2Fweek%20%E2%82%B91500%2Fmonth)." class="bplan" target="_blank" rel="noopener">
+        <div>
+          <div class="bplan-label">Starter Plan</div>
+          <div class="bplan-price">₹1,500 <span>/ month</span></div>
+          <div class="bplan-freq">2 classes per week</div>
+        </div>
+        <div class="bplan-arrow">&rarr;</div>
+      </a>
+      <!-- Scholar second -->
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20the%20Scholar%20Plan%20(3%20classes%2Fweek%20%E2%82%B92000%2Fmonth)." class="bplan popular" target="_blank" rel="noopener">
+        <div class="bplan-badge">Most Popular</div>
+        <div>
+          <div class="bplan-label" style="color:rgba(255,255,255,0.4)">Scholar Plan</div>
+          <div class="bplan-price">₹2,000 <span>/ month</span></div>
+          <div class="bplan-freq">3 classes per week</div>
+        </div>
+        <div class="bplan-arrow">&rarr;</div>
+      </a>
+      <!-- Master third -->
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20the%20Master%20Plan%20(5%20classes%2Fweek%20%E2%82%B93000%2Fmonth)." class="bplan" target="_blank" rel="noopener">
+        <div>
+          <div class="bplan-label">Master Plan</div>
+          <div class="bplan-price">₹3,000 <span>/ month</span></div>
+          <div class="bplan-freq">5 classes per week</div>
+        </div>
+        <div class="bplan-arrow">&rarr;</div>
+      </a>
+    </div>
+    <p class="book-note">Tap any plan to open WhatsApp and book directly with Harshit Singh.</p>
+  </div>
+</div>
+
+<!-- ═══════ FAQ ═══════ -->
+<div class="faq-wrap">
+  <div class="faq-head">
+    <div class="eyebrow">FAQ</div>
+    <h2 class="section-title" style="font-size:clamp(34px,4.5vw,58px);margin-top:8px;">Frequently Asked <em>Questions</em></h2>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What age group are the classes for?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Classes are designed for all age groups — from children aged 6 and above to adults of any level. Harshit adapts the teaching style, pace, and examples to suit the student's age and existing knowledge.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Do I need prior chess knowledge?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">No prior knowledge is required. Complete beginners are very welcome. The Starter plan is specifically designed to take you from zero to confidently playing and understanding chess in a matter of weeks.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do online classes work?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Online classes are conducted live via video call using an interactive digital chessboard. Sessions are fully interactive — ask questions, analyse positions, and receive real-time feedback. Sessions can also be recorded for you to revisit later.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Where are the offline classes held?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Offline classes are held at B-704, Pan Oasis, Sector-70, Noida, Uttar Pradesh. Please book via WhatsApp to confirm your preferred time slot before visiting.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I switch between online and offline?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Yes, absolutely. You can discuss your preferred format when booking, and can switch between formats with advance notice if your circumstances change.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do I book a class?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Simply tap any "Book" button on this page to be redirected to WhatsApp, where you can chat directly with Harshit Singh to choose your plan, format, and schedule your first session.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Harshit<br>Singh</div>
+      <p class="footer-tag">Nationals Chess Player &amp; UP State Chess Champion. Shaping the next generation of strategic thinkers through expert, dedicated chess coaching.</p>
+    </div>
+    <div>
+      <div class="footer-h">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#classes">Classes</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#book">Book Now</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/919560383929" target="_blank" rel="noopener">+91 95603 83929</a></li>
+        <li><a href="#">B-704, Pan Oasis</a></li>
+        <li><a href="#">Sector-70, Noida</a></li>
+        <li><a href="#">Uttar Pradesh, India</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">&copy; 2025 Harshit Singh Chess Classes. All rights reserved.</p>
+    <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20book%20chess%20classes." class="footer-wa" target="_blank" rel="noopener">Book on WhatsApp &rarr;</a>
+  </div>
+</footer>
+
+<script>
+// ── Build mini hero chessboard ──
+(function(){
+  const board = document.getElementById('heroBoardGrid');
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const cell = document.createElement('div');
+      cell.className = 'hpc-cell ' + ((r+c)%2===0 ? 'light' : 'dark');
+      board.appendChild(cell);
+    }
+  }
+})();
+
+// ── Marquee ──
+(function(){
+  const items = [
+    'Nationals Chess Player','UP State Chess Champion',
+    'Online & Offline Classes','All Levels Welcome',
+    'Noida · Pan India Online','Book via WhatsApp',
+    'Beginner to Advanced','Personal Coaching'
+  ];
+  const track = document.getElementById('marqueeTrack');
+  [...items,...items].forEach(t => {
+    const s = document.createElement('span');
+    s.className='marquee-item';
+    s.textContent=t;
+    track.appendChild(s);
+  });
+})();
+
+// ── Scroll reveal ──
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.ach,.pcard,.ccard,.section-piece').forEach(el=>revealObs.observe(el));
+
+// ── FAQ ──
+function toggleFaq(el){
+  const item=el.parentElement;
+  const ans=item.querySelector('.faq-a');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>{
+    i.classList.remove('open');
+    i.querySelector('.faq-a').style.maxHeight='0';
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    ans.style.maxHeight=ans.scrollHeight+'px';
+  }
+}
+
+// ── Mobile menu ──
+function openMobile(){document.getElementById('mobileMenu').classList.add('open');}
+function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');}
+
+// ── Nav scroll ──
+let lastY=0;
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('mainNav');
+  const y=window.scrollY;
+  if(y>80){nav.style.padding=window.innerWidth>900?'14px 56px':'14px 24px';}
+  else{nav.style.padding=window.innerWidth>900?'24px 56px':'18px 24px';}
+  lastY=y;
+},{passive:true});
+</script>
+</body>
+</html>
