@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harshit Singh | Chess Mastery Classes</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Outfit:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --white:#ffffff;--black:#000000;--near-black:#0d0d0d;
+  --off-white:#f7f7f4;--light-gray:#e8e8e8;--mid-gray:#888;
+  --serif:'Cormorant Garamond',serif;--sans:'Outfit',sans-serif;
+  --ease:cubic-bezier(0.25,0.46,0.45,0.94);
+}
+html{scroll-behavior:smooth;}
+body{font-family:var(--sans);background:var(--white);color:var(--black);overflow-x:hidden;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:24px 56px;
+  background:rgba(255,255,255,0.92);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--light-gray);
+  transition:padding 0.35s var(--ease);
+}
+.nav-logo{font-family:var(--serif);font-size:26px;font-weight:700;letter-spacing:-1px;line-height:1;}
+.nav-logo span{font-style:italic;font-weight:300;}
+.nav-links{display:flex;gap:44px;list-style:none;}
+.nav-links a{font-size:11px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;text-decoration:none;color:var(--black);opacity:0.5;transition:opacity 0.2s;}
+.nav-links a:hover{opacity:1;}
+.nav-cta{
+  background:var(--black);color:var(--white);
+  padding:12px 28px;font-size:11px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;display:inline-block;
+  transition:all 0.2s;
+}
+.nav-cta:hover{background:#222;transform:translateY(-1px);}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none;}
+.nav-toggle span{display:block;width:24px;height:1.5px;background:var(--black);transition:all 0.3s;}
+
+/* MOBILE MENU */
+.mobile-menu{
+  position:fixed;inset:0;background:var(--white);z-index:200;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:40px;
+  opacity:0;pointer-events:none;transition:opacity 0.35s var(--ease);
+}
+.mobile-menu.open{opacity:1;pointer-events:all;}
+.mobile-menu a{font-family:var(--serif);font-size:44px;font-weight:700;letter-spacing:-2px;text-decoration:none;color:var(--black);transition:opacity 0.2s;}
+.mobile-menu a:hover{opacity:0.5;}
+.mobile-close{position:absolute;top:24px;right:28px;font-size:36px;cursor:pointer;background:none;border:none;font-family:var(--sans);font-weight:200;color:var(--black);}
+
+/* HERO */
+.hero{
+  min-height:100vh;display:flex;align-items:center;
+  padding:120px 56px 80px;position:relative;overflow:hidden;
+}
+.hero-content{max-width:640px;position:relative;z-index:2;}
+.eyebrow{
+  font-size:10px;font-weight:500;letter-spacing:4px;
+  text-transform:uppercase;color:var(--mid-gray);
+  margin-bottom:36px;display:flex;align-items:center;gap:16px;
+}
+.eyebrow::before{content:'';width:36px;height:1px;background:currentColor;}
+.hero-title{
+  font-family:var(--serif);
+  font-size:clamp(60px,9vw,114px);
+  font-weight:700;line-height:0.93;letter-spacing:-4px;
+  margin-bottom:40px;
+}
+.hero-title em{font-style:italic;font-weight:300;}
+.hero-sub{font-size:16px;font-weight:300;color:#555;line-height:1.75;max-width:440px;margin-bottom:52px;}
+.hero-actions{display:flex;gap:20px;flex-wrap:wrap;align-items:center;}
+.btn-primary{
+  background:var(--black);color:var(--white);
+  padding:18px 44px;font-size:12px;font-weight:500;
+  letter-spacing:2px;text-transform:uppercase;text-decoration:none;
+  display:inline-block;transition:all 0.3s var(--ease);position:relative;overflow:hidden;
+}
+.btn-primary::after{
+  content:'';position:absolute;inset:0;
+  background:rgba(255,255,255,0.08);
+  transform:translateX(-100%);transition:transform 0.45s var(--ease);
+}
+.btn-primary:hover::after{transform:translateX(0);}
+.btn-primary:hover{transform:translateY(-2px);}
+.btn-ghost{
+  border:1px solid rgba(0,0,0,0.25);color:var(--black);
+  padding:18px 44px;font-size:12px;font-weight:400;
+  letter-spacing:2px;text-transform:uppercase;
+  text-decoration:none;display:inline-block;transition:all 0.3s;
+}
+.btn-ghost:hover{border-color:var(--black);background:var(--black);color:var(--white);}
+
+/* HERO VISUAL */
+.hero-visual{
+  position:absolute;right:-40px;top:50%;transform:translateY(-50%);
+  width:500px;height:520px;pointer-events:none;
+}
+.board-scene{
+  position:absolute;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:300px;height:300px;perspective:900px;
+}
+.board-3d{
+  width:100%;height:100%;transform-style:preserve-3d;
+  transform:rotateX(52deg) rotateZ(-18deg);
+  animation:boardFloat 9s ease-in-out infinite;
+}
+@keyframes boardFloat{
+  0%,100%{transform:rotateX(52deg) rotateZ(-18deg) translateY(0);}
+  50%{transform:rotateX(52deg) rotateZ(-18deg) translateY(-22px);}
+}
+.board-grid{
+  display:grid;grid-template-columns:repeat(8,1fr);
+  grid-template-rows:repeat(8,1fr);
+  width:100%;height:100%;
+  border:2px solid var(--black);
+  box-shadow:8px 8px 0 rgba(0,0,0,0.15),16px 16px 0 rgba(0,0,0,0.07);
+}
+.cell.dark{background:var(--black);}
+.cell.light{background:var(--white);outline:0.5px solid #ddd;}
+
+/* FLOATING PIECES */
+.fp{position:absolute;animation-timing-function:ease-in-out;animation-iteration-count:infinite;}
+.fp-king{top:8%;left:12%;animation:fp1 7.5s infinite;}
+.fp-queen{top:16%;right:5%;animation:fp2 10s infinite;}
+.fp-rook{bottom:22%;left:2%;animation:fp3 6.5s infinite;}
+.fp-bishop{bottom:10%;right:12%;animation:fp4 8.5s infinite;}
+.fp-pawn1{top:2%;left:42%;animation:fp1 5.5s infinite;}
+.fp-pawn2{bottom:6%;right:38%;animation:fp2 7s infinite;}
+.fp-knight{top:40%;right:2%;animation:fp3 9s infinite;}
+
+@keyframes fp1{0%,100%{transform:translateY(0) rotate(-6deg) scale(1);}50%{transform:translateY(-28px) rotate(6deg) scale(1.05);}}
+@keyframes fp2{0%,100%{transform:translateY(-12px) rotate(4deg);}50%{transform:translateY(16px) rotate(-4deg);}}
+@keyframes fp3{0%,100%{transform:translateY(6px) rotate(9deg);}50%{transform:translateY(-22px) rotate(-2deg);}}
+@keyframes fp4{0%,100%{transform:translateY(-18px) rotate(-7deg);}50%{transform:translateY(12px) rotate(5deg);}}
+
+/* MARQUEE */
+.marquee{background:var(--black);padding:20px 0;overflow:hidden;white-space:nowrap;}
+.marquee-track{display:inline-flex;animation:marqueeRun 22s linear infinite;}
+.marquee-item{
+  font-family:var(--serif);font-size:18px;font-style:italic;
+  color:rgba(255,255,255,0.75);padding:0 56px;
+  border-right:1px solid rgba(255,255,255,0.15);
+}
+@keyframes marqueeRun{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* SECTIONS */
+.section{padding:128px 56px;}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-title{
+  font-family:var(--serif);
+  font-size:clamp(38px,5vw,72px);
+  font-weight:600;line-height:1.05;letter-spacing:-2.5px;
+}
+.section-title em{font-style:italic;font-weight:300;}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:88px;align-items:flex-start;}
+.about-title{font-family:var(--serif);font-size:clamp(42px,5.5vw,78px);font-weight:600;line-height:1.02;letter-spacing:-3px;margin-bottom:36px;}
+.about-title em{font-style:italic;font-weight:300;}
+.about-text{font-size:16px;font-weight:300;color:#444;line-height:1.8;margin-bottom:48px;}
+
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--light-gray);}
+.stat{padding:28px 24px;border-right:1px solid var(--light-gray);text-align:center;}
+.stat:last-child{border-right:none;}
+.stat-n{font-family:var(--serif);font-size:52px;font-weight:700;letter-spacing:-2px;line-height:1;margin-bottom:6px;}
+.stat-l{font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;color:var(--mid-gray);}
+
+.ach-list{display:flex;flex-direction:column;}
+.ach{
+  padding:26px 0;border-bottom:1px solid var(--light-gray);
+  display:flex;align-items:flex-start;gap:24px;
+  opacity:0;transform:translateX(32px);
+  transition:all 0.75s var(--ease);
+}
+.ach.visible{opacity:1;transform:translateX(0);}
+.ach-n{font-family:var(--serif);font-size:12px;font-weight:300;color:var(--mid-gray);min-width:28px;margin-top:2px;}
+.ach-t{font-size:15px;font-weight:400;line-height:1.5;color:#111;}
+
+/* FORMAT SECTION */
+.formats-wrap{background:var(--off-white);padding:128px 56px;}
+.formats-head{text-align:center;max-width:560px;margin:0 auto 80px;}
+.formats-grid{display:grid;grid-template-columns:1fr 1fr;gap:3px;background:var(--light-gray);max-width:1100px;margin:0 auto;}
+.fcard{
+  background:var(--white);padding:72px 60px;
+  transition:all 0.45s var(--ease);cursor:default;
+  position:relative;overflow:hidden;
+}
+.fcard::after{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:3px;background:var(--black);
+  transform:scaleY(0);transform-origin:bottom;
+  transition:transform 0.45s var(--ease);
+}
+.fcard:hover::after{transform:scaleY(1);}
+.fcard:hover{background:var(--black);color:var(--white);}
+.fcard-tag{font-size:10px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:28px;transition:color 0.4s;}
+.fcard:hover .fcard-tag{color:rgba(255,255,255,0.4);}
+.fcard-name{font-family:var(--serif);font-size:56px;font-weight:700;letter-spacing:-2px;line-height:1;margin-bottom:32px;}
+.fcard-desc{font-size:15px;font-weight:300;color:#555;line-height:1.75;margin-bottom:44px;transition:color 0.4s;}
+.fcard:hover .fcard-desc{color:rgba(255,255,255,0.6);}
+.fcard-list{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.fcard-list li{font-size:14px;font-weight:300;display:flex;align-items:center;gap:14px;color:#333;transition:color 0.4s;}
+.fcard:hover .fcard-list li{color:rgba(255,255,255,0.8);}
+.fcard-list li::before{content:'';width:18px;height:1px;background:currentColor;flex-shrink:0;opacity:0.5;}
+
+/* PRICING */
+.pricing-head{text-align:center;max-width:580px;margin:0 auto 88px;}
+.pricing-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  border:1px solid var(--light-gray);max-width:980px;margin:0 auto;
+}
+.pcard{
+  padding:56px 44px;border-right:1px solid var(--light-gray);
+  display:flex;flex-direction:column;position:relative;
+  opacity:0;transform:translateY(48px);
+  transition:all 0.9s var(--ease);
+}
+.pcard:last-child{border-right:none;}
+.pcard.visible{opacity:1;transform:translateY(0);}
+.pcard.hot{background:var(--black);color:var(--white);}
+.pcard-badge{
+  position:absolute;top:24px;right:24px;
+  font-size:9px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;
+  padding:5px 12px;border:1px solid currentColor;opacity:0.6;
+}
+.pcard-name{font-size:10px;font-weight:500;letter-spacing:4px;text-transform:uppercase;color:var(--mid-gray);margin-bottom:24px;}
+.pcard.hot .pcard-name{color:rgba(255,255,255,0.4);}
+.pcard-freq{
+  display:inline-flex;align-items:center;padding:8px 16px;
+  border:1px solid currentColor;opacity:0.25;
+  font-size:10px;letter-spacing:2px;text-transform:uppercase;font-weight:500;
+  margin-bottom:32px;width:fit-content;
+}
+.pcard-price{font-family:var(--serif);font-size:80px;font-weight:700;letter-spacing:-4px;line-height:1;margin-bottom:4px;}
+.pcard-price sup{font-size:26px;font-weight:400;vertical-align:top;margin-top:14px;display:inline-block;}
+.pcard-period{font-size:12px;color:var(--mid-gray);font-weight:300;margin-bottom:40px;}
+.pcard.hot .pcard-period{color:rgba(255,255,255,0.4);}
+.pcard-divider{height:1px;background:var(--light-gray);margin-bottom:32px;}
+.pcard.hot .pcard-divider{background:rgba(255,255,255,0.12);}
+.pcard-detail{font-family:var(--serif);font-size:19px;font-style:italic;font-weight:400;margin-bottom:28px;}
+.pcard-feats{list-style:none;display:flex;flex-direction:column;gap:14px;flex:1;margin-bottom:44px;}
+.pcard-feats li{font-size:13px;font-weight:300;color:#444;display:flex;align-items:flex-start;gap:12px;line-height:1.4;}
+.pcard.hot .pcard-feats li{color:rgba(255,255,255,0.7);}
+.pcard-feats li::before{content:'';width:14px;height:1px;background:currentColor;margin-top:9px;flex-shrink:0;opacity:0.4;}
+.pcard-btn{
+  display:block;text-align:center;padding:17px 12px;
+  font-size:11px;font-weight:500;letter-spacing:2px;
+  text-transform:uppercase;text-decoration:none;
+  border:1px solid var(--black);color:var(--black);
+  transition:all 0.3s;margin-top:auto;
+}
+.pcard-btn:hover{background:var(--black);color:var(--white);}
+.pcard.hot .pcard-btn{border-color:var(--white);color:var(--white);}
+.pcard.hot .pcard-btn:hover{background:var(--white);color:var(--black);}
+
+/* CURRICULUM */
+.curriculum{background:var(--near-black);color:var(--white);padding:128px 56px;}
+.curr-head{
+  display:flex;justify-content:space-between;align-items:flex-end;
+  max-width:1100px;margin:0 auto 88px;
+}
+.curr-title{font-family:var(--serif);font-size:clamp(36px,5vw,64px);font-weight:600;letter-spacing:-2.5px;line-height:1.05;max-width:380px;}
+.curr-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:1px;background:rgba(255,255,255,0.06);
+  max-width:1100px;margin:0 auto;
+}
+.ccard{
+  background:var(--near-black);padding:44px 36px;
+  border-top:2px solid transparent;
+  transition:all 0.4s var(--ease);
+  opacity:0;transform:translateY(32px);
+  transition:opacity 0.8s var(--ease),transform 0.8s var(--ease),border-color 0.3s,background 0.3s;
+}
+.ccard.visible{opacity:1;transform:translateY(0);}
+.ccard:hover{border-top-color:var(--white);background:#1a1a1a;}
+.ccard-n{font-family:var(--serif);font-size:12px;font-weight:300;color:rgba(255,255,255,0.2);margin-bottom:40px;}
+.ccard-name{font-family:var(--serif);font-size:24px;font-weight:600;line-height:1.15;margin-bottom:16px;}
+.ccard-desc{font-size:13px;font-weight:300;color:rgba(255,255,255,0.45);line-height:1.75;}
+
+/* BOOK SECTION */
+.book-wrap{background:var(--off-white);padding:128px 56px;}
+.book-inner{max-width:680px;margin:0 auto;text-align:center;}
+.book-title{font-family:var(--serif);font-size:clamp(44px,7vw,96px);font-weight:700;line-height:0.92;letter-spacing:-4px;margin-bottom:36px;}
+.book-title em{font-style:italic;font-weight:300;}
+.book-desc{font-size:16px;font-weight:300;color:#555;line-height:1.75;margin-bottom:64px;max-width:480px;margin-left:auto;margin-right:auto;}
+.book-cards{display:flex;flex-direction:column;gap:14px;margin-bottom:32px;}
+.bplan{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:26px 32px;border:1px solid var(--light-gray);
+  text-decoration:none;color:var(--black);
+  background:var(--white);
+  transition:all 0.35s var(--ease);
+  position:relative;
+}
+.bplan:hover{border-color:var(--black);background:var(--black);color:var(--white);}
+.bplan.popular{background:var(--black);color:var(--white);border-color:var(--black);}
+.bplan.popular:hover{background:#1a1a1a;}
+.bplan-badge{
+  position:absolute;top:-1px;right:24px;
+  background:var(--white);color:var(--black);
+  font-size:9px;font-weight:600;letter-spacing:2px;
+  text-transform:uppercase;padding:4px 12px;
+}
+.bplan.popular .bplan-badge{display:block;}
+.bplan-label{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;opacity:0.45;margin-bottom:8px;}
+.bplan-price{font-family:var(--serif);font-size:30px;font-weight:700;letter-spacing:-1px;line-height:1;}
+.bplan-price span{font-size:14px;font-style:italic;font-weight:300;}
+.bplan-freq{font-size:12px;margin-top:4px;opacity:0.55;}
+.bplan-arrow{font-size:22px;font-weight:200;opacity:0.5;}
+.book-note{font-size:12px;color:#999;font-weight:300;text-align:center;}
+
+/* FAQ */
+.faq-wrap{padding:128px 56px;max-width:780px;margin:0 auto;}
+.faq-head{margin-bottom:72px;}
+.faq-item{border-bottom:1px solid var(--light-gray);}
+.faq-q{
+  padding:28px 0;font-family:var(--serif);font-size:22px;font-weight:600;
+  cursor:pointer;display:flex;justify-content:space-between;align-items:center;
+  gap:24px;transition:opacity 0.2s;user-select:none;
+}
+.faq-q:hover{opacity:0.65;}
+.faq-plus{font-size:30px;font-weight:200;transition:transform 0.35s var(--ease);flex-shrink:0;}
+.faq-item.open .faq-plus{transform:rotate(45deg);}
+.faq-a{overflow:hidden;max-height:0;transition:max-height 0.45s var(--ease);}
+.faq-a-inner{padding:0 0 28px;font-size:15px;font-weight:300;color:#555;line-height:1.8;}
+
+/* FOOTER */
+footer{background:var(--black);color:var(--white);padding:88px 56px 44px;}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:80px;max-width:1200px;margin:0 auto 80px;}
+.footer-brand{font-family:var(--serif);font-size:52px;font-weight:700;letter-spacing:-2.5px;line-height:1;margin-bottom:20px;}
+.footer-tag{font-size:13px;font-weight:300;color:rgba(255,255,255,0.35);line-height:1.7;max-width:280px;}
+.footer-h{font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.25);margin-bottom:24px;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:14px;}
+.footer-links a{text-decoration:none;color:rgba(255,255,255,0.55);font-size:14px;font-weight:300;transition:color 0.2s;}
+.footer-links a:hover{color:var(--white);}
+.footer-bottom{
+  border-top:1px solid rgba(255,255,255,0.07);padding-top:40px;
+  display:flex;justify-content:space-between;align-items:center;
+  max-width:1200px;margin:0 auto;
+}
+.footer-copy{font-size:12px;color:rgba(255,255,255,0.25);font-weight:300;}
+.footer-wa{
+  font-size:11px;color:rgba(255,255,255,0.35);letter-spacing:2px;
+  text-transform:uppercase;text-decoration:none;
+  border-bottom:1px solid rgba(255,255,255,0.12);padding-bottom:2px;
+  transition:color 0.2s;
+}
+.footer-wa:hover{color:var(--white);}
+
+/* SCROLL REVEAL */
+.reveal{opacity:0;transform:translateY(44px);transition:all 0.9s var(--ease);}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* DECORATIVE BG GLYPH */
+.bg-glyph{
+  position:absolute;font-family:var(--serif);
+  font-size:360px;font-weight:700;opacity:0.028;
+  pointer-events:none;user-select:none;line-height:1;
+  z-index:0;color:var(--black);
+}
+
+/* MOBILE */
+@media(max-width:900px){
+  nav{padding:18px 24px;}
+  .nav-links{display:none;}
+  .nav-cta{display:none;}
+  .nav-toggle{display:flex;}
+  
+  .hero{padding:100px 24px 64px;}
+  .hero-visual{display:none;}
+  .hero-title{letter-spacing:-2.5px;}
+  
+  .section{padding:80px 24px;}
+  .about-grid{grid-template-columns:1fr;gap:56px;}
+  .stats-row{grid-template-columns:repeat(3,1fr);}
+  .stat{padding:20px 12px;}
+  .stat-n{font-size:40px;}
+  
+  .formats-wrap{padding:80px 24px;}
+  .formats-grid{grid-template-columns:1fr;}
+  .fcard{padding:52px 36px;}
+  .fcard-name{font-size:44px;}
+  
+  .pricing-section{padding:80px 24px;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .pcard{border-right:none;border-bottom:1px solid var(--light-gray);}
+  .pcard.hot{order:-1;}
+  
+  .curriculum{padding:80px 24px;}
+  .curr-head{flex-direction:column;gap:36px;align-items:flex-start;}
+  .curr-grid{grid-template-columns:1fr 1fr;}
+  .ccard{padding:36px 28px;}
+  
+  .book-wrap{padding:80px 24px;}
+  .book-title{letter-spacing:-2.5px;}
+  .bplan{padding:22px 24px;}
+  
+  .faq-wrap{padding:80px 24px;}
+  .faq-q{font-size:19px;}
+  
+  footer{padding:72px 24px 40px;}
+  .footer-grid{grid-template-columns:1fr;gap:44px;}
+  .footer-bottom{flex-direction:column;gap:16px;text-align:center;}
+  .footer-brand{font-size:40px;}
+  
+  .curr-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu" id="mobileMenu">
+  <button class="mobile-close" onclick="closeMobile()">×</button>
+  <a href="#about" onclick="closeMobile()">About</a>
+  <a href="#classes" onclick="closeMobile()">Classes</a>
+  <a href="#pricing" onclick="closeMobile()">Pricing</a>
+  <a href="#book" onclick="closeMobile()">Book Now</a>
+  <a href="#contact" onclick="closeMobile()">Contact</a>
+</div>
+
+<!-- NAV -->
+<nav id="mainNav">
+  <div class="nav-logo">H<span>arshit</span> Singh</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#classes">Classes</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20book%20chess%20classes." class="nav-cta" target="_blank" rel="noopener">Book Now</a>
+  <button class="nav-toggle" id="navToggle" onclick="openMobile()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<section class="hero" id="hero">
+  <span class="bg-glyph" style="right:-60px;top:40%;color:var(--black);">♚</span>
+  
+  <div class="hero-content">
+    <div class="eyebrow">Nationals Chess Player &middot; UP State Champion</div>
+    <h1 class="hero-title">
+      Master<br>the <em>Art</em><br>of Chess
+    </h1>
+    <p class="hero-sub">
+      Learn from Harshit Singh — decorated national chess competitor and 
+      Uttar Pradesh State Chess Champion. Expert coaching for all levels, 
+      both online and offline.
+    </p>
+    <div class="hero-actions">
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20book%20a%20free%20trial%20chess%20class." class="btn-primary" target="_blank" rel="noopener">Book a Free Trial &rarr;</a>
+      <a href="#pricing" class="btn-ghost">View Pricing</a>
+    </div>
+  </div>
+
+  <!-- 3D BOARD + FLOATING PIECES -->
+  <div class="hero-visual" aria-hidden="true">
+    <!-- King -->
+    <div class="fp fp-king">
+      <svg width="50" height="68" viewBox="0 0 50 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="60" width="34" height="7" rx="1" fill="#000"/>
+        <rect x="12" y="52" width="26" height="10" rx="1" fill="#000"/>
+        <rect x="19" y="22" width="12" height="32" fill="#000"/>
+        <rect x="17" y="14" width="16" height="12" rx="1" fill="#000"/>
+        <rect x="13" y="20" width="24" height="6" rx="2" fill="#000"/>
+        <rect x="21" y="4" width="8" height="14" fill="#000"/>
+        <rect x="15" y="8" width="20" height="5" fill="#000"/>
+      </svg>
+    </div>
+    <!-- Queen -->
+    <div class="fp fp-queen">
+      <svg width="52" height="74" viewBox="0 0 52 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="66" width="36" height="7" rx="1" fill="#000"/>
+        <rect x="12" y="57" width="28" height="11" rx="1" fill="#000"/>
+        <path d="M16 55 L20 22 L26 32 L32 16 L36 28 L32 55 Z" fill="#000"/>
+        <circle cx="14" cy="15" r="5" fill="#000"/>
+        <circle cx="26" cy="8" r="6" fill="#000"/>
+        <circle cx="38" cy="15" r="5" fill="#000"/>
+      </svg>
+    </div>
+    <!-- Rook -->
+    <div class="fp fp-rook">
+      <svg width="46" height="66" viewBox="0 0 46 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="7" y="58" width="32" height="7" rx="1" fill="#000"/>
+        <rect x="11" y="50" width="24" height="10" rx="1" fill="#000"/>
+        <rect x="13" y="24" width="20" height="28" fill="#000"/>
+        <rect x="9" y="12" width="28" height="14" fill="#000"/>
+        <rect x="9" y="6" width="7" height="10" fill="#000"/>
+        <rect x="19.5" y="6" width="7" height="10" fill="#000"/>
+        <rect x="30" y="6" width="7" height="10" fill="#000"/>
+      </svg>
+    </div>
+    <!-- Bishop -->
+    <div class="fp fp-bishop">
+      <svg width="44" height="74" viewBox="0 0 44 74" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="7" y="66" width="30" height="7" rx="1" fill="#000"/>
+        <rect x="11" y="57" width="22" height="11" rx="1" fill="#000"/>
+        <path d="M22 12 C32 22 36 38 32 56 L12 56 C8 38 12 22 22 12 Z" fill="#000"/>
+        <circle cx="22" cy="9" r="6" fill="#000"/>
+        <rect x="19" y="3" width="6" height="3" fill="#000"/>
+      </svg>
+    </div>
+    <!-- Knight -->
+    <div class="fp fp-knight">
+      <svg width="52" height="70" viewBox="0 0 52 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="8" y="62" width="36" height="7" rx="1" fill="#000"/>
+        <rect x="12" y="53" width="28" height="11" rx="1" fill="#000"/>
+        <path d="M16 52 C16 40 12 30 14 20 C16 10 24 6 30 8 C36 10 40 18 38 26 C36 32 28 34 24 38 C22 40 20 44 20 52 Z" fill="#000"/>
+        <circle cx="30" cy="14" r="3" fill="white"/>
+      </svg>
+    </div>
+    <!-- Pawn 1 -->
+    <div class="fp fp-pawn1">
+      <svg width="36" height="56" viewBox="0 0 36 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="48" width="24" height="7" rx="1" fill="#000"/>
+        <rect x="9" y="40" width="18" height="10" rx="1" fill="#000"/>
+        <path d="M18 18 C25 22 28 36 24 40 L12 40 C8 36 11 22 18 18 Z" fill="#000"/>
+        <circle cx="18" cy="13" r="8" fill="#000"/>
+      </svg>
+    </div>
+    <!-- Pawn 2 -->
+    <div class="fp fp-pawn2">
+      <svg width="36" height="56" viewBox="0 0 36 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="6" y="48" width="24" height="7" rx="1" fill="#000"/>
+        <rect x="9" y="40" width="18" height="10" rx="1" fill="#000"/>
+        <path d="M18 18 C25 22 28 36 24 40 L12 40 C8 36 11 22 18 18 Z" fill="#000"/>
+        <circle cx="18" cy="13" r="8" fill="#000"/>
+      </svg>
+    </div>
+
+    <div class="board-scene">
+      <div class="board-3d">
+        <div class="board-grid" id="chessBoard"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ MARQUEE ═══════ -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee-track" id="marqueeTrack"></div>
+</div>
+
+<!-- ═══════ ABOUT ═══════ -->
+<section class="section" id="about">
+  <div class="about-grid">
+    <div>
+      <div class="eyebrow">The Coach</div>
+      <h2 class="about-title">Your Guide to <em>Chess Mastery</em></h2>
+      <p class="about-text">Harshit Singh is a decorated national-level chess player and UP State Chess Champion, with years of competitive experience and a deep passion for teaching. His structured methodology blends classical strategy with modern opening theory — tailored precisely to each student's pace and ambition.</p>
+      <div class="stats-row reveal">
+        <div class="stat">
+          <div class="stat-n">5+</div>
+          <div class="stat-l">Years Coaching</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">200+</div>
+          <div class="stat-l">Students Taught</div>
+        </div>
+        <div class="stat">
+          <div class="stat-n">50+</div>
+          <div class="stat-l">Tournaments Played</div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="ach-list">
+        <div class="ach" style="transition-delay:0s"><span class="ach-n">01</span><span class="ach-t">Nationals Chess Player — represented Uttar Pradesh at national level competitions</span></div>
+        <div class="ach" style="transition-delay:0.12s"><span class="ach-n">02</span><span class="ach-t">UP State Chess Champion — winner of the Uttar Pradesh State Championship</span></div>
+        <div class="ach" style="transition-delay:0.22s"><span class="ach-n">03</span><span class="ach-t">Structured curriculum for all levels — from absolute beginner to tournament preparation</span></div>
+        <div class="ach" style="transition-delay:0.32s"><span class="ach-n">04</span><span class="ach-t">Personalized coaching with real game analysis, tactical puzzles, and endgame drills</span></div>
+        <div class="ach" style="transition-delay:0.42s"><span class="ach-n">05</span><span class="ach-t">Both in-person sessions in Noida and online classes available pan-India</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FORMATS ═══════ -->
+<div class="formats-wrap" id="classes">
+  <div class="formats-head reveal">
+    <div class="eyebrow" style="justify-content:center;">Class Formats</div>
+    <h2 class="section-title" style="margin-bottom:16px;">Learn <em>Your Way</em></h2>
+    <p style="font-size:15px;font-weight:300;color:#666;line-height:1.75;">Choose the format that fits your life — the discipline of in-person coaching, or the flexibility of learning from anywhere.</p>
+  </div>
+  <div class="formats-grid">
+    <div class="fcard reveal">
+      <div class="fcard-tag">Format 01</div>
+      <div class="fcard-name">Online<br>Classes</div>
+      <p class="fcard-desc">Live interactive sessions from the comfort of home. Real-time board analysis, recorded replays, and direct feedback — all through your screen.</p>
+      <ul class="fcard-list">
+        <li>Live video sessions via any device</li>
+        <li>Interactive digital chessboard analysis</li>
+        <li>Sessions recorded for review</li>
+        <li>WhatsApp support group included</li>
+        <li>Available anywhere in India</li>
+      </ul>
+    </div>
+    <div class="fcard reveal" style="transition-delay:0.15s">
+      <div class="fcard-tag">Format 02</div>
+      <div class="fcard-name">Offline<br>Classes</div>
+      <p class="fcard-desc">Face-to-face coaching at our Noida centre. Physical board work, real clock training, and the focused energy of a dedicated chess environment.</p>
+      <ul class="fcard-list">
+        <li>In-person at B-704, Pan Oasis, Sector-70, Noida</li>
+        <li>Physical board and clock training</li>
+        <li>Group and 1-on-1 sessions available</li>
+        <li>Tournament simulation games</li>
+        <li>Immediate feedback and correction</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ PRICING ═══════ -->
+<section class="section pricing-section" id="pricing">
+  <div class="pricing-head reveal">
+    <div class="eyebrow" style="justify-content:center;">Invest in Your Game</div>
+    <h2 class="section-title" style="margin-bottom:16px;">Simple, <em>Transparent</em> Pricing</h2>
+    <p style="font-size:15px;font-weight:300;color:#666;line-height:1.7;">All plans cover one full month of coaching. Scale up your commitment, scale up your results.</p>
+  </div>
+  <div class="pricing-grid">
+
+    <!-- Starter -->
+    <div class="pcard" style="transition-delay:0s">
+      <div class="pcard-name">Starter</div>
+      <div class="pcard-freq">2 Classes / Week</div>
+      <div class="pcard-price"><sup>₹</sup>1,500</div>
+      <div class="pcard-period">per month &middot; ~8 classes</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-detail">Perfect for Beginners</div>
+      <ul class="pcard-feats">
+        <li>2 sessions per week</li>
+        <li>Chess fundamentals & rules</li>
+        <li>Opening principles & basic theory</li>
+        <li>Tactical patterns & puzzles</li>
+        <li>WhatsApp doubt support</li>
+        <li>Online or offline format</li>
+      </ul>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20join%20the%20Starter%20Plan%20(2%20classes%2Fweek%20%E2%82%B91500%2Fmonth)." class="pcard-btn" target="_blank" rel="noopener">Book Starter Plan &rarr;</a>
+    </div>
+
+    <!-- Scholar (FEATURED) -->
+    <div class="pcard hot" style="transition-delay:0.18s">
+      <div class="pcard-badge">Most Popular</div>
+      <div class="pcard-name">Scholar</div>
+      <div class="pcard-freq" style="border-color:rgba(255,255,255,0.3);">3 Classes / Week</div>
+      <div class="pcard-price"><sup>₹</sup>2,000</div>
+      <div class="pcard-period">per month &middot; ~12 classes</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-detail">Accelerated Improvement</div>
+      <ul class="pcard-feats">
+        <li>3 sessions per week</li>
+        <li>Opening repertoire building</li>
+        <li>Middlegame strategy & plans</li>
+        <li>Endgame technique fundamentals</li>
+        <li>Real game analysis & review</li>
+        <li>Priority WhatsApp support</li>
+        <li>Online or offline format</li>
+      </ul>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20join%20the%20Scholar%20Plan%20(3%20classes%2Fweek%20%E2%82%B92000%2Fmonth)." class="pcard-btn" target="_blank" rel="noopener">Book Scholar Plan &rarr;</a>
+    </div>
+
+    <!-- Master -->
+    <div class="pcard" style="transition-delay:0.36s">
+      <div class="pcard-name">Master</div>
+      <div class="pcard-freq">5 Classes / Week</div>
+      <div class="pcard-price"><sup>₹</sup>3,000</div>
+      <div class="pcard-period">per month &middot; ~20 classes</div>
+      <div class="pcard-divider"></div>
+      <div class="pcard-detail">Tournament Ready</div>
+      <ul class="pcard-feats">
+        <li>5 intensive sessions per week</li>
+        <li>Full competitive preparation</li>
+        <li>Deep opening analysis & systems</li>
+        <li>Complete endgame mastery</li>
+        <li>Your tournament games reviewed</li>
+        <li>Psychological game preparation</li>
+        <li>FIDE rating guidance</li>
+        <li>Priority 1-on-1 coaching</li>
+      </ul>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20join%20the%20Master%20Plan%20(5%20classes%2Fweek%20%E2%82%B93000%2Fmonth)." class="pcard-btn" target="_blank" rel="noopener">Book Master Plan &rarr;</a>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══════ CURRICULUM ═══════ -->
+<section class="curriculum">
+  <div class="curr-head">
+    <div>
+      <div class="eyebrow" style="color:rgba(255,255,255,0.35);">What You Learn</div>
+      <h2 class="curr-title section-title" style="color:white;">A Complete <em>Chess</em> Education</h2>
+    </div>
+    <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20know%20more%20about%20your%20chess%20curriculum." class="btn-primary" style="background:white;color:black;flex-shrink:0;" target="_blank" rel="noopener">Enquire Now</a>
+  </div>
+  <div class="curr-grid">
+    <div class="ccard" style="transition-delay:0s">
+      <div class="ccard-n">01</div>
+      <div class="ccard-name">Openings &amp; Theory</div>
+      <p class="ccard-desc">Build a solid, personalized opening repertoire with classical and modern systems tailored to your playing style.</p>
+    </div>
+    <div class="ccard" style="transition-delay:0.1s">
+      <div class="ccard-n">02</div>
+      <div class="ccard-name">Tactical Patterns</div>
+      <p class="ccard-desc">Forks, pins, skewers, discovered attacks — master the recurring patterns that decide games at every level.</p>
+    </div>
+    <div class="ccard" style="transition-delay:0.2s">
+      <div class="ccard-n">03</div>
+      <div class="ccard-name">Middlegame Plans</div>
+      <p class="ccard-desc">Understand pawn structures, piece coordination, weak squares, and how to formulate decisive winning plans.</p>
+    </div>
+    <div class="ccard" style="transition-delay:0.3s">
+      <div class="ccard-n">04</div>
+      <div class="ccard-name">Endgame Mastery</div>
+      <p class="ccard-desc">Convert advantages into wins with precise king-and-pawn, rook, and queen endgame technique and calculation.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ BOOK ═══════ -->
+<div class="book-wrap" id="book">
+  <div class="book-inner">
+    <div class="eyebrow" style="justify-content:center;">Book a Class</div>
+    <h2 class="book-title reveal">Ready to <em>Make<br>Your Move?</em></h2>
+    <p class="book-desc reveal">Select your plan and connect directly with Harshit Singh on WhatsApp to schedule your first class. No forms — just a conversation.</p>
+    <div class="book-cards reveal">
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20the%20Starter%20Plan%20(2%20classes%2Fweek%20%E2%82%B91500%2Fmonth)." class="bplan" target="_blank" rel="noopener">
+        <div>
+          <div class="bplan-label">Starter Plan</div>
+          <div class="bplan-price">₹1,500 <span>/ month</span></div>
+          <div class="bplan-freq">2 classes per week</div>
+        </div>
+        <div class="bplan-arrow">&rarr;</div>
+      </a>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20the%20Scholar%20Plan%20(3%20classes%2Fweek%20%E2%82%B92000%2Fmonth)." class="bplan popular" target="_blank" rel="noopener">
+        <div class="bplan-badge">Most Popular</div>
+        <div>
+          <div class="bplan-label" style="color:rgba(255,255,255,0.4)">Scholar Plan</div>
+          <div class="bplan-price">₹2,000 <span>/ month</span></div>
+          <div class="bplan-freq">3 classes per week</div>
+        </div>
+        <div class="bplan-arrow">&rarr;</div>
+      </a>
+      <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20the%20Master%20Plan%20(5%20classes%2Fweek%20%E2%82%B93000%2Fmonth)." class="bplan" target="_blank" rel="noopener">
+        <div>
+          <div class="bplan-label">Master Plan</div>
+          <div class="bplan-price">₹3,000 <span>/ month</span></div>
+          <div class="bplan-freq">5 classes per week</div>
+        </div>
+        <div class="bplan-arrow">&rarr;</div>
+      </a>
+    </div>
+    <p class="book-note">Tap any plan to open WhatsApp and book directly with Harshit Singh.</p>
+  </div>
+</div>
+
+<!-- ═══════ FAQ ═══════ -->
+<div class="faq-wrap">
+  <div class="faq-head">
+    <div class="eyebrow">FAQ</div>
+    <h2 class="section-title" style="font-size:clamp(34px,4.5vw,58px);margin-top:8px;">Frequently Asked <em>Questions</em></h2>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">What age group are the classes for?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Classes are designed for all age groups — from children aged 6 and above to adults of any level. Harshit adapts the teaching style, pace, and examples to suit the student's age and existing knowledge.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Do I need prior chess knowledge?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">No prior knowledge is required. Complete beginners are very welcome. The Starter plan is specifically designed to take you from zero to confidently playing and understanding chess in a matter of weeks.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do online classes work?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Online classes are conducted live via video call using an interactive digital chessboard. Sessions are fully interactive — ask questions, analyse positions, and receive real-time feedback. Sessions can also be recorded for you to revisit later.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Where are the offline classes held?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Offline classes are held at B-704, Pan Oasis, Sector-70, Noida, Uttar Pradesh. Please book via WhatsApp to confirm your preferred time slot before visiting.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">Can I switch between online and offline?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Yes, absolutely. You can discuss your preferred format when booking, and can switch between formats with advance notice if your circumstances change.</p></div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q" onclick="toggleFaq(this)">How do I book a class?<span class="faq-plus">+</span></div>
+    <div class="faq-a"><p class="faq-a-inner">Simply tap any "Book" button on this page to be redirected to WhatsApp, where you can chat directly with Harshit Singh to choose your plan, format, and schedule your first session.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer id="contact">
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">Harshit<br>Singh</div>
+      <p class="footer-tag">Nationals Chess Player &amp; UP State Chess Champion. Shaping the next generation of strategic thinkers through expert, dedicated chess coaching.</p>
+    </div>
+    <div>
+      <div class="footer-h">Navigate</div>
+      <ul class="footer-links">
+        <li><a href="#about">About</a></li>
+        <li><a href="#classes">Classes</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#book">Book Now</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-h">Contact</div>
+      <ul class="footer-links">
+        <li><a href="https://wa.me/919560383929" target="_blank" rel="noopener">+91 95603 83929</a></li>
+        <li><a href="#">B-704, Pan Oasis</a></li>
+        <li><a href="#">Sector-70, Noida</a></li>
+        <li><a href="#">Uttar Pradesh, India</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">&copy; 2025 Harshit Singh Chess Classes. All rights reserved.</p>
+    <a href="https://wa.me/919560383929?text=Hi%20Harshit!%20I%27d%20like%20to%20book%20chess%20classes." class="footer-wa" target="_blank" rel="noopener">Book on WhatsApp &rarr;</a>
+  </div>
+</footer>
+
+<script>
+// ── Build 8x8 chess board ──
+(function(){
+  const board = document.getElementById('chessBoard');
+  for(let r=0;r<8;r++){
+    for(let c=0;c<8;c++){
+      const cell = document.createElement('div');
+      cell.className = 'cell ' + ((r+c)%2===0 ? 'light' : 'dark');
+      board.appendChild(cell);
+    }
+  }
+})();
+
+// ── Marquee ──
+(function(){
+  const items = [
+    'Nationals Chess Player','UP State Chess Champion',
+    'Online & Offline Classes','All Levels Welcome',
+    'Noida · Pan India Online','Book via WhatsApp',
+    'Beginner to Advanced','Personal Coaching'
+  ];
+  const track = document.getElementById('marqueeTrack');
+  [...items,...items].forEach(t => {
+    const s = document.createElement('span');
+    s.className='marquee-item';
+    s.textContent=t;
+    track.appendChild(s);
+  });
+})();
+
+// ── Scroll reveal ──
+const revealObs = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal,.ach,.pcard,.ccard').forEach(el=>revealObs.observe(el));
+
+// ── FAQ ──
+function toggleFaq(el){
+  const item=el.parentElement;
+  const ans=item.querySelector('.faq-a');
+  const isOpen=item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i=>{
+    i.classList.remove('open');
+    i.querySelector('.faq-a').style.maxHeight='0';
+  });
+  if(!isOpen){
+    item.classList.add('open');
+    ans.style.maxHeight=ans.scrollHeight+'px';
+  }
+}
+
+// ── Mobile menu ──
+function openMobile(){document.getElementById('mobileMenu').classList.add('open');}
+function closeMobile(){document.getElementById('mobileMenu').classList.remove('open');}
+
+// ── Nav scroll ──
+let lastY=0;
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('mainNav');
+  const y=window.scrollY;
+  if(y>80){nav.style.padding=window.innerWidth>900?'14px 56px':'14px 24px';}
+  else{nav.style.padding=window.innerWidth>900?'24px 56px':'18px 24px';}
+  lastY=y;
+},{passive:true});
+</script>
+</body>
+</html>
